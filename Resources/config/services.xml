@@ -4,17 +4,131 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
+    
     <parameters>
-        <parameter key="neutron_gallery.example.class">Neutron\Plugin\GalleryBundle\Example</parameter>
+        <parameter key="neutron_gallery.plugin.builder.class">Neutron\Plugin\GalleryBundle\GalleryPlugin</parameter>
+        <parameter key="neutron_gallery.doctrine.gallery_manager.default.class">Neutron\Plugin\GalleryBundle\Doctrine\GalleryManager</parameter>
+        <parameter key="neutron_gallery.controller.backend.gallery.default.class">Neutron\Plugin\GalleryBundle\Controller\Backend\GalleryController</parameter>
+        <parameter key="neutron_gallery.controller.frontend.gallery.default.class">Neutron\Plugin\GalleryBundle\Controller\Frontend\GalleryController</parameter>
+        <parameter key="neutron_gallery.form.backend.type.gallery.class">Neutron\Plugin\GalleryBundle\Form\Backend\Type\GalleryType</parameter>
+        <parameter key="neutron_gallery.form.backend.type.gallery.content.class">Neutron\Plugin\GalleryBundle\Form\Backend\Type\Gallery\ContentType</parameter>
+        <parameter key="neutron_gallery.form.backend.handler.gallery.default.class">Neutron\Plugin\GalleryBundle\Form\Backend\Handler\GalleryHandler</parameter>
+        <parameter key="neutron_gallery.datagrid.builder.gallery_management.class">Neutron\Plugin\GalleryBundle\DataGrid\GalleryManagementDataGrid</parameter>
     </parameters>
 
     <services>
-        <service id="neutron_gallery.example" class="%neutron_gallery.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+    
+        <service id="neutron_gallery.plugin.builder" class="%neutron_gallery.plugin.builder.class%">
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="neutron_mvc.plugin.factory" />
+            <argument type="service" id="router" />
+            <argument type="service" id="translator" />
+            <argument>%neutron_gallery.translation_domain%</argument>
         </service>
+        
+        
+        <service id="neutron_gallery.plugin" 
+        	class="Neutron\MvcBundle\Plugin\PluginFactory"
+        	factory-service="neutron_gallery.plugin.builder"
+        	factory-method="build"
+        >
+            <tag name="neutron.plugin" alias="neutron.plugin.gallery"/>
+        </service>
+        
+        <service id="neutron_gallery.doctrine.gallery_manager.default" 
+        	class="%neutron_gallery.doctrine.gallery_manager.default.class%"
+        >       	
+            <call method="setClassName">
+            	<argument>%neutron_gallery.gallery_class%</argument>
+            </call>
+            <call method="setObjectManager">
+            	<argument type="service" id="object_manager" />
+            </call>
+        </service>
+        
+        <service id="neutron_gallery.controller.backend.gallery.default" 
+      		class="%neutron_gallery.controller.backend.gallery.default.class%"
+        >	
+ 			<call method="setContainer">
+            	<argument type="service" id="service_container" />
+            </call>    
+        </service>
+        
+        <service id="neutron_gallery.controller.frontend.gallery.default" 
+        	class="%neutron_gallery.controller.frontend.gallery.default.class%">
+        	
+       	    <call method="setContainer">
+            	<argument type="service" id="service_container" />
+            </call>
+        </service>
+        
+        <service id="neutron_gallery.form.backend.type.gallery"
+        	class="%neutron_gallery.form.backend.type.gallery.class%"
+        >         
+            <call method="setAclManager">
+            	<argument type="service" id="neutron_admin.acl.manager" />
+            </call>
+     
+            <tag name="form.type" alias="neutron_backend_gallery" />
+        </service>
+        
+        <service id="neutron_gallery.form.backend.type.gallery.content" 
+			class="%neutron_gallery.form.backend.type.gallery.content.class%"
+		>
+			<call method="setGalleryClass">
+            	<argument>%neutron_gallery.gallery_class%</argument>
+            </call>
+            
+			<call method="setImageClass">
+            	<argument>%neutron_gallery.image_class%</argument>
+            </call>
+            
+			<call method="setImageOptions">
+            	<argument>%neutron_gallery.image_options%</argument>
+            </call>
+            
+			<call method="setTemplates">
+            	<argument>%neutron_gallery.templates%</argument>
+            </call>
+            
+			<call method="setTranslationDomain">
+            	<argument>%neutron_gallery.translation_domain%</argument>
+            </call>
+            
+            <tag name="form.type" alias="neutron_backend_gallery_content" />
+		</service>
+		
+		<service id="neutron_gallery.form.backend.handler.gallery.default" 
+        	class="%neutron_gallery.form.backend.handler.gallery.default.class%"
+        >
+        	<call method="setContainer">
+        		<argument type="service" id="service_container" />
+        	</call>
+
+        	<call method="setTranslationDomain">
+        		<argument>%neutron_gallery.translation_domain%</argument>
+        	</call>
+        </service>
+        
+        <service id="neutron_gallery.datagrid.builder.gallery_management" 
+        	class="%neutron_gallery.datagrid.builder.gallery_management.class%"
+        	scope="request"
+       	>
+        	<argument type="service" id="neutron_data_grid.factory" />
+        	<argument type="service" id="translator" />
+        	<argument type="service" id="router" />
+        	<argument type="service" id="neutron_gallery.gallery_manager" />
+        	<argument>%neutron_gallery.translation_domain%</argument>
+        </service>
+        
+        <service id="neutron_gallery.datagrid.gallery_management" 
+        	class="Neutron\Bundle\DataGridBundle\DataGrid\DataGrid"
+        	factory-service="neutron_gallery.datagrid.builder.gallery_management"
+        	factory-method="build"
+        >
+        	<tag name="neutron_data_grid.datagrid" alias="neutron_gallery_management" />
+        </service>
+
     </services>
-    -->
+
 </container>

@@ -4,5 +4,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
+    <route id="neutron_gallery.backend.gallery" pattern="/admin/plugin/gallery">
+        <default key="_controller">neutron_gallery.controller.backend.gallery:indexAction</default>
+        <requirement key="_method">GET|POST</requirement>
+    </route>
 
+    <route id="neutron_gallery.backend.gallery.update" pattern="/admin/plugin/gallery/update/{id}">
+        <default key="_controller">neutron_gallery.controller.backend.gallery:updateAction</default>
+        <requirement key="_method">GET|POST</requirement>
+    </route>
+
+    <route id="neutron_gallery.backend.gallery.delete" pattern="/admin/plugin/gallery/delete/{id}">
+        <default key="_controller">neutron_gallery.controller.backend.gallery:deleteAction</default>
+        <requirement key="_method">GET|POST</requirement>
+    </route>
+    
 </routes>
