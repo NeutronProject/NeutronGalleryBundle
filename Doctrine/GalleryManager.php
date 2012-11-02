@@ -9,6 +9,6 @@ class GalleryManager extends AbstractManager implements GalleryManagerInterface
 {
     public function getQueryBuilderForGalleryManagementDataGrid()
     {
-        return $this->getQueryBuilderForGalleryManagementDataGrid();
+        return $this->repository->getQueryBuilderForGalleryManagementDataGrid();
     }
 }

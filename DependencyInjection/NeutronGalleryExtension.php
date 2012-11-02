@@ -38,6 +38,7 @@ class NeutronGalleryExtension extends Extension
         $container->setParameter('neutron_gallery.gallery_class', $config['gallery_class']);
         $container->setParameter('neutron_gallery.image_class', $config['image_class']);
         $container->setAlias('neutron_gallery.gallery_manager', $config['manager']);
+        $container->setParameter('neutron_gallery.datagrid.gallery_management', $config['datagrid']);
         $container->setAlias('neutron_gallery.controller.backend.gallery', $config['controller_backend']);
         $container->setAlias('neutron_gallery.controller.frontend.gallery', $config['controller_frontend']);
         

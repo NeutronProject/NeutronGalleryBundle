@@ -44,7 +44,7 @@ class GalleryPlugin
         $plugin
             ->setLabel($this->translator->trans('plugin.gallery.label', array(), $this->translationDomain))
             ->setDescription($this->translator->trans('plugin.gallery.description', array(), $this->translationDomain))
-            ->setFrontController('neutron_gallery.controller.frontend.gallery:indexAction')
+            ->setFrontendRoute('neutron_gallery.frontend.gallery')
             ->setUpdateRoute('neutron_gallery.backend.gallery.update')
             ->setDeleteRoute('neutron_gallery.backend.gallery.delete')
             ->setManagerServiceId('neutron_gallery.gallery_manager')
